@@ -75,33 +75,33 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
       }),
     );
 
-    const image_file = document.getElementById(
-      "edition-cover",
-    ) as HTMLInputElement;
+    const image_file = document.getElementById("edition-cover") as HTMLInputElement;
 
     const requestMethod = id ? "PUT" : "POST";
 
-    if (image_file.files.length !== 0) {
+    if (image_file.files && image_file.files.length !== 0) {
       const image = image_file.files[0] as File;
       const imageForm = new FormData();
       imageForm.append("image", image);
       toastId.current = toast.info("Uploading 0%", { autoClose: false });
-      const image_promise = API.post(
-        `/images/edition-image/${edition.edition_id}`,
-        imageForm,
-        {
-          onUploadProgress: (progressEvent) => {
-            const progress = progressEvent.loaded / progressEvent.total;
-            const percentCompleted = Math.round(progress * 100);
-            console.debug(progress);
-            toast.update(toastId.current, {
-              render: `Uploading ${percentCompleted}%`,
-              type: "info",
-              progress: progress,
-            });
-          },
+      const image_promise = API({
+        method: "POST",
+        url: `/images/edition-image/${data.edition_id}`,
+        data: imageForm,
+        params: {
+          thumbnail: "true",
         },
-      )
+        onUploadProgress: (progressEvent) => {
+          const progress = progressEvent.loaded / progressEvent.total;
+          const percentCompleted = Math.round(progress * 100);
+          console.debug(progress);
+          toast.update(toastId.current, {
+            render: `Uploading ${percentCompleted}%`,
+            type: "info",
+            progress: progress,
+          });
+        },
+      })
         .then(() => {
           toast.update(toastId.current, {
             render: "Uploading complete!",
