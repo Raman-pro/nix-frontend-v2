@@ -79,7 +79,7 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
 
     const requestMethod = id ? "PUT" : "POST";
 
-    // FIRST: Create/update edition
+    // FIRST: Create/update edition to get the correct edition_id
     const data_promise = API({
       method: requestMethod,
       url: endpoint,
@@ -102,9 +102,10 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
           imageForm.append("image", image);
           toastId.current = toast.info("Uploading 0%", { autoClose: false });
 
+          // Use edition_id from response - works for both new and updated editions
           return API({
             method: "POST",
-            url: `/images/edition-image/${created_edition.edition_id}`, // Use edition_id from response
+            url: `/images/edition-image/${created_edition.edition_id}`,
             data: imageForm,
             params: { thumbnail: "true" },
             onUploadProgress: (progressEvent) => {
