@@ -233,7 +233,7 @@ export default function ReadStory() {
               className="object-contain h-3/6 w-3/6"
               image_id={blog.cover}
               thumbnail={true}
-              image_type="Avatar"
+              image_type={1}
               alt="Blog Cover Image"
             />
           ) : (
